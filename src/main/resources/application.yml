@@ -1,0 +1,54 @@
+server:
+  port: 9000
+
+spring:
+#  datasource:
+#    url: jdbc:postgresql://dpg-cevdd79gp3jjsh37lg30-a.oregon-postgres.render.com/authorizationdb
+#    password: nIudQvepKT739QSDRuLjMLmm8AdzYo9s
+#    username: webdroid
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tester1
+    password: root
+    username: postgres
+    driverClassName: org.postgresql.Driver
+#  datasource:
+#    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
+#    password: sa
+#    username: sa
+#    driver-class-name: org.h2.Driver
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+#  h2:
+#    console.enabled: true
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 506639357717-arjs7hf8vicf2efpni81bt78cujcnv37.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+
+app:
+  auth:
+    tokenSecret: 04ca023b39512e46d0c2cf4b48d5aac61d34302994c87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
+    tokenExpirationMsec: 864000000
+  cors:
+    allowedOrigins: http://localhost:3031,http://localhost:9000
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    authorizedRedirectUris:
+      - http://localhost:3031/oauth2/redirect
