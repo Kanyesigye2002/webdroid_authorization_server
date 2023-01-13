@@ -8,7 +8,7 @@ import lombok.Data
 import org.hibernate.annotations.GenericGenerator
 
 
-@Entity(name = "system_users")
+@Entity(name = "system_user")
 @Data
 class User(
     @Id

@@ -24,10 +24,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
-import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer
@@ -36,11 +32,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod
 import org.springframework.security.oauth2.core.oidc.OidcScopes
 import org.springframework.security.oauth2.jwt.JwtDecoder
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService
-import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository
+import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration
@@ -81,7 +73,7 @@ class AuthorizationServerConfig {
 
     // @formatter:off
     @Bean
-    fun registeredClientRepository(jdbcTemplate: JdbcTemplate?): RegisteredClientRepository {
+    fun registeredClientRepository(): RegisteredClientRepository {
         val registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
             .clientId("messaging-client")
             .clientSecret("{noop}secret")
@@ -98,27 +90,7 @@ class AuthorizationServerConfig {
             .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
             .build()
 
-        // Save registered client in db as if in-memory
-        val registeredClientRepository = JdbcRegisteredClientRepository(jdbcTemplate)
-        registeredClientRepository.save(registeredClient)
-        return registeredClientRepository
-    }
-
-    // @formatter:on
-    @Bean
-    fun authorizationService(
-        jdbcTemplate: JdbcTemplate?,
-        registeredClientRepository: RegisteredClientRepository?
-    ): OAuth2AuthorizationService {
-        return JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository)
-    }
-
-    @Bean
-    fun authorizationConsentService(
-        jdbcTemplate: JdbcTemplate?,
-        registeredClientRepository: RegisteredClientRepository?
-    ): OAuth2AuthorizationConsentService {
-        return JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository)
+        return InMemoryRegisteredClientRepository(registeredClient)
     }
 
     @Bean
@@ -136,19 +108,5 @@ class AuthorizationServerConfig {
     @Bean
     fun authorizationServerSettings(): AuthorizationServerSettings {
         return AuthorizationServerSettings.builder().build()
-    }
-
-    @Bean
-    fun embeddedDatabase(): EmbeddedDatabase {
-        // @formatter:off
-        return EmbeddedDatabaseBuilder()
-            .generateUniqueName(true)
-            .setType(EmbeddedDatabaseType.H2)
-            .setScriptEncoding("UTF-8")
-            .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
-            .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
-            .addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
-            .build()
-        // @formatter:on
     }
 }

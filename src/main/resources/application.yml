@@ -7,10 +7,9 @@ spring:
 #    password: nIudQvepKT739QSDRuLjMLmm8AdzYo9s
 #    username: webdroid
   datasource:
-    url: jdbc:postgresql://localhost:5432/tester1
+    url: jdbc:postgresql://localhost:5432/tester
     password: root
     username: postgres
-    driverClassName: org.postgresql.Driver
 #  datasource:
 #    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
 #    password: sa
@@ -20,13 +19,13 @@ spring:
 #    database-platform: org.hibernate.dialect.H2Dialect
 #  h2:
 #    console.enabled: true
-#  jpa:
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   security:
     oauth2:
       client:

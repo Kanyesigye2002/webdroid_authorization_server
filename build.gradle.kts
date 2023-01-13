@@ -36,7 +36,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("com.h2database:h2")
+//    runtimeOnly("com.h2database:h2")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
