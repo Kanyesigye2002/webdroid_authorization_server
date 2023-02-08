@@ -1,0 +1,6 @@
+package com.webdroid.webdroidauthorizationserver.repository
+
+import com.webdroid.webdroidauthorizationserver.entity.Oauth2Authorization
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface Oauth2AuthorizationRepository : JpaRepository<Oauth2Authorization, String>

@@ -1,0 +1,6 @@
+package com.webdroid.webdroidauthorizationserver.repository
+
+import com.webdroid.webdroidauthorizationserver.entity.Oauth2AuthorizationConsent
+import org.springframework.data.repository.CrudRepository
+
+interface Oauth2AuthorizationConsentRepository : CrudRepository<Oauth2AuthorizationConsent, String>

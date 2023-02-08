@@ -3,45 +3,68 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Login - Webdroid Admin</title>
+    <title>Login - Webdroid</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossorigin="anonymous" />
+          crossorigin="anonymous"/>
 </head>
 <body>
 <div style="height: 100vh; width: 100vw; display: flex; justify-content: center; align-items: center">
-<div class="container-fluid text-center">
-    <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto;">
+    <div class="container-fluid text-center">
+        <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto;">
 
-        <div th:if="${param.error}">
-            <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
-        </div>
-
-        <div th:if="${param.logout}">
-            <p class="text-warning">You have been logged out.</p>
-        </div>
-
-        <div class="border border-secondary p-3 rounded">
-            <div>
-                <img class="img-fluid" th:src="@{/images/logo.png}" width="120" style="padding: 16px 16px 24px;" />
+            <div th:if="${param.error}">
+                <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
             </div>
-            <p>Access to Webdroid Control Panel</p>
-            <p>
-                <input type="email" name="username" class="form-control" placeholder="E-mail" required autofocus/>
-            </p>
-            <p>
-                <input type="password" name="password" class="form-control" placeholder="Password" required />
-            </p>
-            <p>
-                <input type="checkbox" name="remember-me" />&nbsp;Remember Me
-            </p>
-            <a href="/oauth2/authorize/google">Google</a>
-            <p>
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </p>
-        </div>
-    </form>
-</div>
+
+            <div th:if="${param.logout}">
+                <p class="text-warning">You have been logged out.</p>
+            </div>
+
+            <div class="border border-secondary p-3 rounded">
+                <div>
+                    <img class="img-fluid" th:src="@{/images/logo.png}" width="120" style="padding: 16px 16px 24px;"/>
+                </div>
+                <p>Access to Webdroid</p>
+
+                <p>
+                    <input type="email" name="username" class="form-control" placeholder="E-mail" required autofocus/>
+                </p>
+                <p>
+                    <input type="password" name="password" class="form-control" placeholder="Password" required/>
+                </p>
+                <!--            <p>-->
+                <!--                <input type="checkbox" name="remember-me" />&nbsp;Remember Me-->
+                <!--            </p>-->
+
+                <div style="display: flex;padding-top: 16px">
+                    <div style="width: 100%">
+                        <div class="divider" role="separator"><span class="divider-wrapper">OR</span></div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row;justify-content: center">
+
+                    <div style="display: flex; flex-direction: row;justify-content: space-between;padding: 8px 0 32px;width: 180px">
+                        <a th:href="@{/oauth2/authorization/google}" class="social-links">
+                            <img class="img-fluid" th:src="@{/images/google.svg}" style="width: 20px; height: 20px;"/>
+                        </a>
+                        <a th:href="@{/oauth2/authorization/twitter}" class="social-links">
+                            <img class="img-fluid" th:src="@{/images/twitter.svg}" style="width: 20px; height: 20px;"/>
+                        </a>
+                        <a th:href="@{/oauth2/authorization/github}" class="social-links">
+                            <img class="img-fluid" th:src="@{/images/github.svg}" style="width: 20px; height: 20px;"/>
+                        </a>
+                    </div>
+                </div>
+
+                <p>
+                    <input type="submit" value="Login" class="app-btn" style="width: 120px"/>
+                </p>
+            </div>
+        </form>
+    </div>
 </div>
 </body>
 </html>

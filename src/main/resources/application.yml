@@ -1,15 +1,37 @@
 server:
   port: 9000
 
+support:
+  email: webdroid21@gmail.com
+
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    protocol: smtps
+    username: kanyeallanz@gmail.com
+    password: ypyahfbkocluswhm
+    properties:
+      mail:
+        transport:
+          protocol: smtps
+        smtps:
+          auth: true
+          starttls:
+            enable: true
+            timeout: 8000
 #  datasource:
 #    url: jdbc:postgresql://dpg-cevdd79gp3jjsh37lg30-a.oregon-postgres.render.com/authorizationdb
 #    password: nIudQvepKT739QSDRuLjMLmm8AdzYo9s
 #    username: webdroid
   datasource:
-    url: jdbc:postgresql://localhost:5432/tester
-    password: root
-    username: postgres
+    url: jdbc:postgres://gcc:Eh3XJmJqnOMIB9PUkEGXTJpPIgjttm37@dpg-ceug3imn6mpglqcpb2g0-a.oregon-postgres.render.com/gcc_9o0v
+    password: Eh3XJmJqnOMIB9PUkEGXTJpPIgjttm37
+    username: gcc
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/tester
+#    password: root
+#    username: postgres
 #  datasource:
 #    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
 #    password: sa
@@ -20,7 +42,7 @@ spring:
 #  h2:
 #    console.enabled: true
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: update
     properties:
@@ -33,21 +55,28 @@ spring:
           google:
             clientId: 506639357717-arjs7hf8vicf2efpni81bt78cujcnv37.apps.googleusercontent.com
             clientSecret: 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
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
+          facebook:
+            clientId: 1886486938358143
+            clientSecret: 9ff9366b2ce267a77ed4d727ff97792d
+          github:
+            clientId: e3b457104f577a5309fa
+            clientSecret: 588892e9c452f39089e68934402e0a05a9308844
 
 app:
+  frontendUrl: http://localhost:3031
   auth:
     tokenSecret: 04ca023b39512e46d0c2cf4b48d5aac61d34302994c87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
     tokenExpirationMsec: 864000000
   cors:
-    allowedOrigins: http://localhost:3031,http://localhost:9000
+    allowedOrigins: http://localhost:3031,http://localhost:9000,http://localhost:8080
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,
     # we'll be generating an auth token for the user and sending the token to the
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
-      - http://localhost:3031/oauth2/redirect
+      - http://localhost:3000/oauth2/redirect
+      - https://zimba.vercel.app/oauth2/redirect
