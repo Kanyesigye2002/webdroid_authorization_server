@@ -25,7 +25,7 @@ spring:
 #    password: nIudQvepKT739QSDRuLjMLmm8AdzYo9s
 #    username: webdroid
   datasource:
-    url: jdbc:postgres://gcc:Eh3XJmJqnOMIB9PUkEGXTJpPIgjttm37@dpg-ceug3imn6mpglqcpb2g0-a.oregon-postgres.render.com/gcc_9o0v
+    url: jdbc:postgresql://dpg-ceug3imn6mpglqcpb2g0-a.oregon-postgres.render.com/gcc_9o0v
     password: Eh3XJmJqnOMIB9PUkEGXTJpPIgjttm37
     username: gcc
 #  datasource:
@@ -44,7 +44,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
