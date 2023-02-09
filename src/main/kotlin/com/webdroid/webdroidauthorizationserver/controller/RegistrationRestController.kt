@@ -12,6 +12,7 @@ import com.webdroid.webdroidauthorizationserver.listener.OnRegistrationCompleteE
 import com.webdroid.webdroidauthorizationserver.service.UserService
 import com.webdroid.webdroidauthorizationserver.util.GenericResponse
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,6 +47,12 @@ class RegistrationRestController @Autowired constructor(
         userService.addUserLocation(registered, getClientIP(request))
         eventPublisher.publishEvent(OnRegistrationCompleteEvent(registered!!, appConfig.frontendUrl))
         return GenericResponse("success")
+    }
+
+    // Registration
+    @PostMapping("/redirect")
+    fun redirect(response: HttpServletResponse) {
+        response.sendRedirect("foobar://success?code=1337")
     }
 
     // User activation - verification
