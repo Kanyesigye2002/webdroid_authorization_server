@@ -6,10 +6,12 @@ RUN gradle build --no-daemon -x test
 FROM openjdk:17-jdk-alpine
 MAINTAINER Webdroid "webdroid0001@gmail.com"
 
-RUN mkdir /home
+RUN mkdir home
 
 COPY --from=build /home /home
 #COPY --from=build /home/gradle/src/src/main/resources/maxmind/GeoLite2-Country.mmdb /app/GeoLite2-Country.mmdb
+
+CMD "ls"
 
 ENTRYPOINT ["java","-jar","/app/src/build/libs/webdroid-authorization-server-0.0.1.jar"]
 
