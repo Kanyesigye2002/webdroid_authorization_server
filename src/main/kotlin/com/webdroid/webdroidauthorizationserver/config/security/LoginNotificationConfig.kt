@@ -20,6 +20,7 @@ class LoginNotificationConfig {
     @Bean(name = ["GeoIPCity"])
     @Throws(IOException::class)
     fun databaseReader(): DatabaseReader {
+        logger.info("----------------- GeoIPCity -----------------")
         val resource = this.javaClass.classLoader.getResourceAsStream("maxmind/GeoLite2-City.mmdb")
 //        val resource = File("src/main/resources/maxmind/GeoLite2-City.mmdb")
 //        val resource = ResourceUtils.getFile("classpath:maxmind/GeoLite2-City.mmdb")

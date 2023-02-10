@@ -137,6 +137,7 @@ class DefaultSecurityConfig @Autowired constructor(
         GeoIp2Exception::class
     )
     fun databaseReader(): DatabaseReader? {
+        logger.info("----------------- GeoIPCountry -----------------")
         val resource = this.javaClass.classLoader.getResourceAsStream("maxmind/GeoLite2-Country.mmdb")
 //        val resource = ResourceUtils.getFile("classpath:maxmind/GeoLite2-Country.mmdb")
 //        val resource = File("src/main/resources/maxmind/GeoLite2-Country.mmdb")
