@@ -24,7 +24,11 @@ class LoginNotificationConfig {
         val resource = this.javaClass.classLoader.getResourceAsStream("maxmind/GeoLite2-City.mmdb")
 //        val resource = File("src/main/resources/maxmind/GeoLite2-City.mmdb")
 //        val resource = ResourceUtils.getFile("classpath:maxmind/GeoLite2-City.mmdb")
-        logger.info("GeoIPCity database: $resource")
+        if (resource != null) {
+            logger.info("GeoIPCity database: ${resource.available()}")
+        } else {
+            logger.info("GeoIPCity database: null")
+        }
         return DatabaseReader.Builder(resource)
             .build()
     }

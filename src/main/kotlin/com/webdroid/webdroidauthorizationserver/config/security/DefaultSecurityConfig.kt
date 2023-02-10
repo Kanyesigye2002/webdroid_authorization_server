@@ -141,7 +141,11 @@ class DefaultSecurityConfig @Autowired constructor(
         val resource = this.javaClass.classLoader.getResourceAsStream("maxmind/GeoLite2-Country.mmdb")
 //        val resource = ResourceUtils.getFile("classpath:maxmind/GeoLite2-Country.mmdb")
 //        val resource = File("src/main/resources/maxmind/GeoLite2-Country.mmdb")
-        logger.info("GeoIPCity: $resource")
+        if (resource != null) {
+            logger.info("GeoIPCountry: ${resource.available()}")
+        } else {
+            logger.info("GeoIPCountry: null")
+        }
         return DatabaseReader.Builder(resource).build()
     }
 
