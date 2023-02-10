@@ -21,10 +21,7 @@ import org.springframework.core.env.Environment
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -50,7 +47,7 @@ class RegistrationRestController @Autowired constructor(
     }
 
     // Registration
-    @PostMapping("/redirect")
+    @RequestMapping("/redirect")
     fun redirect(response: HttpServletResponse) {
         response.sendRedirect("foobar://success?code=1337")
     }

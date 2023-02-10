@@ -68,11 +68,21 @@ class CustomOAuth2UserService @Autowired constructor(
         val user = User()
         user.provider = AuthProvider.valueOf(oAuth2UserRequest.clientRegistration.registrationId)
         user.providerId = oAuth2UserInfo.id
-        user.name = oAuth2UserInfo.name
+        if (oAuth2UserInfo.attributes["name"] != null) {
+            user.name = oAuth2UserInfo.name
+        } else {
+            user.name = oAuth2UserInfo.username
+        }
         user.firstName = oAuth2UserInfo.firstName
         user.lastName = oAuth2UserInfo.lastName
         user.username = oAuth2UserInfo.username
-        user.email = oAuth2UserInfo.email
+        if (oAuth2UserRequest.clientRegistration.registrationId == "github") {
+            if (oAuth2UserInfo.attributes["email"] != null) {
+                user.email = oAuth2UserInfo.email
+            }
+        } else {
+            user.email = oAuth2UserInfo.email
+        }
         user.avatarUrl = oAuth2UserInfo.imageUrl
         return userRepository.save(user)
     }

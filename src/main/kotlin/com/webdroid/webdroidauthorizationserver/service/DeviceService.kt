@@ -25,7 +25,7 @@ class DeviceService @Autowired constructor(
     private val parser: Parser,
     private val mailSender: JavaMailSender,
     private val messages: MessageSource
-){
+) {
     @Value("\${support.email}")
     private val from: String? = null
 

@@ -67,8 +67,6 @@ class DefaultSecurityConfig @Autowired constructor(
             .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers(
-                        "/",
-                        "/redirect",
                         "/favicon.ico",
                         "/*/*.png",
                         "/*/*.gif",

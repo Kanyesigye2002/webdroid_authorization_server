@@ -80,3 +80,5 @@ app:
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect
       - https://zimba.vercel.app/oauth2/redirect
+      - foobar://success
+      - http://success
