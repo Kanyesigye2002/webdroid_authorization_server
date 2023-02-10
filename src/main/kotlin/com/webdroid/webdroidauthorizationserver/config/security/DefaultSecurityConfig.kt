@@ -22,6 +22,7 @@ import com.webdroid.webdroidauthorizationserver.config.security.oauth2.CustomOAu
 import com.webdroid.webdroidauthorizationserver.config.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository
 import com.webdroid.webdroidauthorizationserver.config.security.oauth2.OAuth2AuthenticationFailureHandler
 import com.webdroid.webdroidauthorizationserver.config.security.oauth2.OAuth2AuthenticationSuccessHandler
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -31,7 +32,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.session.HttpSessionEventPublisher
-import java.io.File
+import org.springframework.util.ResourceUtils
 import java.io.IOException
 
 /**
@@ -51,6 +52,8 @@ class DefaultSecurityConfig @Autowired constructor(
     private val oAuth2AuthenticationSuccessHandler: OAuth2AuthenticationSuccessHandler,
     private val oAuth2AuthenticationFailureHandler: OAuth2AuthenticationFailureHandler
 ) {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     @Bean
     @Throws(Exception::class)
@@ -134,7 +137,9 @@ class DefaultSecurityConfig @Autowired constructor(
         GeoIp2Exception::class
     )
     fun databaseReader(): DatabaseReader? {
-        val resource = File("src/main/resources/maxmind/GeoLite2-Country.mmdb")
+        val resource = ResourceUtils.getFile("classpath:maxmind/GeoLite2-Country.mmdb")
+//        val resource = File("src/main/resources/maxmind/GeoLite2-Country.mmdb")
+        logger.info("GeoIPCity: ${resource.absolutePath}")
         return DatabaseReader.Builder(resource).build()
     }
 
