@@ -6,16 +6,14 @@ RUN gradle build --no-daemon -x test
 FROM openjdk:17-jdk-alpine
 MAINTAINER Webdroid "webdroid0001@gmail.com"
 
-RUN mkdir home
+RUN mkdir /app
 
-COPY --from=build /home /home
-#COPY --from=build /home/gradle/src/src/main/resources/maxmind/GeoLite2-Country.mmdb /app/GeoLite2-Country.mmdb
+COPY --from=build /home/gradle/src/build/libs/webdroid-authorization-server-0.0.1.jar /app/spring-boot-application.jar
 
-CMD "ls"
-
-ENTRYPOINT ["java","-jar","/app/src/build/libs/webdroid-authorization-server-0.0.1.jar"]
+ENTRYPOINT ["java","-jar","/app/spring-boot-application.jar"]
 
 EXPOSE 9000
+
 
 #ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/spring-boot-application.jar"]
 #RUN apk --update --no-cache add curl

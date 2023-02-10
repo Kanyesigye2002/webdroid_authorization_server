@@ -32,8 +32,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.session.HttpSessionEventPublisher
-import org.springframework.util.ResourceUtils
 import java.io.IOException
+
 
 /**
  * @author Joe Grandja
@@ -137,9 +137,10 @@ class DefaultSecurityConfig @Autowired constructor(
         GeoIp2Exception::class
     )
     fun databaseReader(): DatabaseReader? {
-        val resource = ResourceUtils.getFile("classpath:maxmind/GeoLite2-Country.mmdb")
+        val resource = this.javaClass.classLoader.getResourceAsStream("maxmind/GeoLite2-Country.mmdb")
+//        val resource = ResourceUtils.getFile("classpath:maxmind/GeoLite2-Country.mmdb")
 //        val resource = File("src/main/resources/maxmind/GeoLite2-Country.mmdb")
-        logger.info("GeoIPCity: ${resource.absolutePath}")
+        logger.info("GeoIPCity: $resource")
         return DatabaseReader.Builder(resource).build()
     }
 
