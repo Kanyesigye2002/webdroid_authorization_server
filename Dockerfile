@@ -7,10 +7,8 @@ FROM openjdk:17-jdk-alpine
 MAINTAINER Webdroid "webdroid0001@gmail.com"
 
 RUN mkdir /app
-WORKDIR /app
-mkdir /src
 
-COPY --from=build /home/gradle/src /app
+COPY --from=build /home/gradle /app
 #COPY --from=build /home/gradle/src/src/main/resources/maxmind/GeoLite2-Country.mmdb /app/GeoLite2-Country.mmdb
 
 ENTRYPOINT ["java","-jar","/app/src/build/libs/webdroid-authorization-server-0.0.1.jar"]
