@@ -15,7 +15,6 @@ ENTRYPOINT ["java","-jar","/app/src/build/libs/webdroid-authorization-server-0.0
 
 EXPOSE 9000
 
-
 #ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/spring-boot-application.jar"]
 #RUN apk --update --no-cache add curl
 #HEALTHCHECK CMD curl -f http://localhost:8080/health || exit 1
