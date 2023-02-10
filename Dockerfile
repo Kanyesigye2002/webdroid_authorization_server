@@ -6,7 +6,7 @@ RUN gradle build --no-daemon -x test
 FROM openjdk:17-jdk-alpine
 MAINTAINER Webdroid "webdroid0001@gmail.com"
 
-RUN #mkdir /app
+RUN mkdir /app
 
 COPY --from=build /home/gradle/src /app
 #COPY --from=build /home/gradle/src/src/main/resources/maxmind/GeoLite2-Country.mmdb /app/GeoLite2-Country.mmdb
