@@ -44,6 +44,7 @@ class SetupDataLoader @Autowired constructor(
 
         // == create initial user
         createUserIfNotFound("test@test.com", "Test", "Test", "test", ArrayList(Arrays.asList(adminRole)))
+        createUserIfNotFound("test@webdroid.com", "Webdroid", "Services", "webdroid", ArrayList(Arrays.asList(adminRole)))
         alreadySetup = true
     }
 

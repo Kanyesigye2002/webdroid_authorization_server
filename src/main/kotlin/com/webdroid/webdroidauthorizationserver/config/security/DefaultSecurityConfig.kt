@@ -17,6 +17,7 @@ package com.webdroid.webdroidauthorizationserver.config.security
 
 import com.maxmind.geoip2.DatabaseReader
 import com.maxmind.geoip2.exception.GeoIp2Exception
+import com.webdroid.webdroidauthorizationserver.config.AppUserDetailsService
 import com.webdroid.webdroidauthorizationserver.config.CustomAuthenticationProvider
 import com.webdroid.webdroidauthorizationserver.config.security.oauth2.CustomOAuth2UserService
 import com.webdroid.webdroidauthorizationserver.config.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository
@@ -26,11 +27,15 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.session.HttpSessionEventPublisher
 import java.io.IOException
 
@@ -50,10 +55,24 @@ class DefaultSecurityConfig @Autowired constructor(
     private val customLoginFailureHandler: CustomLoginFailureHandler,
     private val httpCookieOAuth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository,
     private val oAuth2AuthenticationSuccessHandler: OAuth2AuthenticationSuccessHandler,
-    private val oAuth2AuthenticationFailureHandler: OAuth2AuthenticationFailureHandler
+    private val oAuth2AuthenticationFailureHandler: OAuth2AuthenticationFailureHandler,
+    private val tokenAuthenticationFilter: TokenAuthenticationFilter
 ) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
+
+    @Bean
+    fun authenticationProvider(userService: AppUserDetailsService, passwordEncoder: PasswordEncoder): AuthenticationProvider {
+        val provider = DaoAuthenticationProvider()
+        provider.setUserDetailsService(userService)
+        provider.setPasswordEncoder(passwordEncoder)
+        return provider
+    }
+
+//    @Bean
+//    fun tokenAuthenticationFilter(): TokenAuthenticationFilter {
+//        return TokenAuthenticationFilter()
+//    }
 
     @Bean
     @Throws(Exception::class)
@@ -62,9 +81,6 @@ class DefaultSecurityConfig @Autowired constructor(
             .cors()
             .and()
             .csrf { csrf -> csrf
-                .disable()
-            }
-            .httpBasic { basic -> basic
                 .disable()
             }
             .authorizeHttpRequests { authorize ->
@@ -78,6 +94,8 @@ class DefaultSecurityConfig @Autowired constructor(
                         "/*/*.html",
                         "/*/*.css",
                         "/*/*.js",
+                        "/api/v1/signup",
+                        "/api/v1/login",
                         "/auth/**",
                         "/oauth2/**",
                         "/oauth2/authorization/**",
@@ -86,10 +104,6 @@ class DefaultSecurityConfig @Autowired constructor(
                     ).permitAll()
                     .requestMatchers("/invalidSession*")
                     .anonymous()
-                    .requestMatchers("/user/updatePassword*")
-                    .hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
-//                    .anyRequest()
-//                    .hasAuthority("READ_PRIVILEGE")
                     .anyRequest().authenticated()
             }
             .formLogin { form -> form
@@ -118,12 +132,8 @@ class DefaultSecurityConfig @Autowired constructor(
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler)
             }
+            .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
-    }
-
-    @Bean
-    fun tokenAuthenticationFilter(): TokenAuthenticationFilter? {
-        return TokenAuthenticationFilter()
     }
 
     @Autowired

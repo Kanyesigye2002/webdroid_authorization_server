@@ -3,18 +3,21 @@ package com.webdroid.webdroidauthorizationserver.config.security
 import com.webdroid.webdroidauthorizationserver.config.AppUserDetailsService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
-import jakarta.servlet.http.*
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import lombok.AllArgsConstructor
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
+import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
 @Slf4j
+@Component
 @AllArgsConstructor
 class TokenAuthenticationFilter : OncePerRequestFilter() {
     @Autowired
@@ -27,7 +30,6 @@ class TokenAuthenticationFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        try {
             val jwt = getJwtFromRequest(request)
             if (StringUtils.hasText(jwt) && tokenProvider!!.validateToken(jwt)) {
                 val userId = tokenProvider.getUserIdFromToken(jwt)
@@ -36,9 +38,6 @@ class TokenAuthenticationFilter : OncePerRequestFilter() {
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
             }
-        } catch (ex: Exception) {
-            logger.error("Could not set user authentication in security context", ex)
-        }
         filterChain.doFilter(request, response)
     }
 

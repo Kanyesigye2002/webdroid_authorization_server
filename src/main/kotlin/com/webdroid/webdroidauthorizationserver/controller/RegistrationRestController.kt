@@ -38,11 +38,11 @@ class RegistrationRestController @Autowired constructor(
 
     // Registration
     @PostMapping("/user/registration")
-    fun registerUserAccount(accountDto: @Valid UserDto?, request: HttpServletRequest): GenericResponse {
+    fun registerUserAccount(accountDto: @Valid UserDto, request: HttpServletRequest): GenericResponse {
         logger.debug("Registering user account with information: {}", accountDto)
         val registered = userService.registerNewUserAccount(accountDto)
         userService.addUserLocation(registered, getClientIP(request))
-        eventPublisher.publishEvent(OnRegistrationCompleteEvent(registered!!, appConfig.frontendUrl))
+        eventPublisher.publishEvent(OnRegistrationCompleteEvent(registered, appConfig.frontendUrl))
         return GenericResponse("success")
     }
 

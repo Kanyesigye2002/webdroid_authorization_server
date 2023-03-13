@@ -9,6 +9,9 @@ import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.env.Environment
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.net.InetAddress
@@ -30,10 +33,23 @@ class UserService @Autowired constructor(
     @Autowired
     @Qualifier("GeoIPCountry")
     private val databaseReader: DatabaseReader? = null
+
+
+    fun exists(username: String): Boolean {
+        return userRepository.existsByUsername(username)
+    }
+
+    val currentUser: User
+        get() = Optional
+            .ofNullable(SecurityContextHolder.getContext())
+            .map { obj: SecurityContext -> obj.authentication }
+            .map { obj: Authentication -> obj.name }
+            .flatMap { userName: String -> userRepository.findByUsername(userName) }
+            .orElse(null)
     
     // API
-    fun registerNewUserAccount(accountDto: UserDto?): User? {
-        if (emailExists(accountDto!!.email!!)) {
+    fun registerNewUserAccount(accountDto: UserDto): User {
+        if (exists(accountDto.username!!)) {
             throw UserAlreadyExistsException("There is an account with that email address: " + accountDto.email)
         }
         val user = User()
@@ -128,10 +144,6 @@ class UserService @Autowired constructor(
         // tokenRepository.delete(verificationToken);
         userRepository.save(user)
         return TOKEN_VALID
-    }
-
-    private fun emailExists(email: String): Boolean {
-        return userRepository.findByUsername(email).isPresent
     }
 
     fun isNewLoginLocation(username: String?, ip: String?): NewLocationToken? {

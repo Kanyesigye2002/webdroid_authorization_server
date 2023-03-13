@@ -1,6 +1,7 @@
 package com.webdroid.webdroidauthorizationserver.config.security
 
 import com.webdroid.webdroidauthorizationserver.config.AppProperties
+import com.webdroid.webdroidauthorizationserver.entity.User
 import com.webdroid.webdroidauthorizationserver.entity.UserPrincipal
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
@@ -29,6 +30,20 @@ class TokenProvider @Autowired constructor(private val appConfig: AppProperties)
             .setId(UUID.randomUUID().toString())
             .setIssuer("Webdroid")
             .setSubject(userPrincipal.id)
+            .setIssuedAt(now)
+            .setExpiration(expiryDate)
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact()
+    }
+
+    fun createToken(user: User): String {
+        val now = Date()
+        val expiryDate = Date(now.time + appConfig.auth.tokenExpirationMsec)
+        val key: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(appConfig.auth.tokenSecret))
+        return Jwts.builder()
+            .setId(UUID.randomUUID().toString())
+            .setIssuer("Webdroid")
+            .setSubject(user.id)
             .setIssuedAt(now)
             .setExpiration(expiryDate)
             .signWith(key, SignatureAlgorithm.HS512)

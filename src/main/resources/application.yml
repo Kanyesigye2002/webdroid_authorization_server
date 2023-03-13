@@ -4,6 +4,12 @@ server:
 support:
   email: webdroid21@gmail.com
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 spring:
   mail:
     host: smtp.gmail.com
@@ -24,14 +30,14 @@ spring:
 #    url: jdbc:postgresql://dpg-cevdd79gp3jjsh37lg30-a.oregon-postgres.render.com/authorizationdb
 #    password: nIudQvepKT739QSDRuLjMLmm8AdzYo9s
 #    username: webdroid
-  datasource:
-    url: jdbc:postgresql://dpg-ceug3imn6mpglqcpb2g0-a.oregon-postgres.render.com/gcc_9o0v
-    password: Eh3XJmJqnOMIB9PUkEGXTJpPIgjttm37
-    username: gcc
 #  datasource:
-#    url: jdbc:postgresql://localhost:5432/tester
-#    password: root
-#    username: postgres
+#    url: jdbc:postgresql://dpg-ceug3imn6mpglqcpb2g0-a.oregon-postgres.render.com/gcc_9o0v
+#    password: Eh3XJmJqnOMIB9PUkEGXTJpPIgjttm37
+#    username: gcc
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tester
+    password: root
+    username: postgres
 #  datasource:
 #    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
 #    password: sa
@@ -47,7 +53,8 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
   security:
     oauth2:
       client:
