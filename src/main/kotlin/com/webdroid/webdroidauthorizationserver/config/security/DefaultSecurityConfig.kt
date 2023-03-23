@@ -15,8 +15,6 @@
  */
 package com.webdroid.webdroidauthorizationserver.config.security
 
-import com.maxmind.geoip2.DatabaseReader
-import com.maxmind.geoip2.exception.GeoIp2Exception
 import com.webdroid.webdroidauthorizationserver.config.AppUserDetailsService
 import com.webdroid.webdroidauthorizationserver.config.CustomAuthenticationProvider
 import com.webdroid.webdroidauthorizationserver.config.security.oauth2.CustomOAuth2UserService
@@ -37,7 +35,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.session.HttpSessionEventPublisher
-import java.io.IOException
 
 
 /**
@@ -139,24 +136,6 @@ class DefaultSecurityConfig @Autowired constructor(
     @Autowired
     fun bindAuthenticationProvider(authenticationManagerBuilder: AuthenticationManagerBuilder) {
         authenticationManagerBuilder.authenticationProvider(customAuthenticationProvider)
-    }
-
-    @Bean(name = ["GeoIPCountry"])
-    @Throws(
-        IOException::class,
-        GeoIp2Exception::class
-    )
-    fun databaseReader(): DatabaseReader? {
-        logger.info("----------------- GeoIPCountry -----------------")
-        val resource = this.javaClass.classLoader.getResourceAsStream("maxmind/GeoLite2-Country.mmdb")
-//        val resource = ResourceUtils.getFile("classpath:maxmind/GeoLite2-Country.mmdb")
-//        val resource = File("src/main/resources/maxmind/GeoLite2-Country.mmdb")
-        if (resource != null) {
-            logger.info("GeoIPCountry: ${resource.available()}")
-        } else {
-            logger.info("GeoIPCountry: null")
-        }
-        return DatabaseReader.Builder(resource).build()
     }
 
 //    @Bean

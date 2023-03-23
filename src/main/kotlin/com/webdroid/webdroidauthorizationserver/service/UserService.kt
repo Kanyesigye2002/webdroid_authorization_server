@@ -1,20 +1,17 @@
 package com.webdroid.webdroidauthorizationserver.service
 
-import com.maxmind.geoip2.DatabaseReader
 import com.webdroid.webdroidauthorizationserver.dto.UserDto
 import com.webdroid.webdroidauthorizationserver.entity.*
 import com.webdroid.webdroidauthorizationserver.exception.UserAlreadyExistsException
 import com.webdroid.webdroidauthorizationserver.repository.*
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.net.InetAddress
 import java.util.*
 
 @Service
@@ -29,10 +26,6 @@ class UserService @Autowired constructor(
     private val newLocationTokenRepository: NewLocationTokenRepository,
     private val env: Environment
 ) {
-
-    @Autowired
-    @Qualifier("GeoIPCountry")
-    private val databaseReader: DatabaseReader? = null
 
 
     fun exists(username: String): Boolean {
@@ -144,53 +137,6 @@ class UserService @Autowired constructor(
         // tokenRepository.delete(verificationToken);
         userRepository.save(user)
         return TOKEN_VALID
-    }
-
-    fun isNewLoginLocation(username: String?, ip: String?): NewLocationToken? {
-        if (!isGeoIpLibEnabled) {
-            return null
-        }
-        try {
-            val ipAddress = InetAddress.getByName(ip)
-            val country = databaseReader!!.country(ipAddress)
-                .country
-                .name
-            println("$country====****")
-            val user = userRepository.findByUsername(username!!).get()
-            val loc = userLocationRepository.findByCountryAndUser(country, user)
-            if (!loc.isEnabled) {
-                return createNewLocationToken(country, user)
-            }
-        } catch (e: Exception) {
-            return null
-        }
-        return null
-    }
-
-    fun isValidNewLocationToken(token: String?): String? {
-        val locToken = newLocationTokenRepository.findByToken(token!!)
-        var userLoc = locToken.userLocation
-        userLoc!!.isEnabled = true
-        userLoc = userLocationRepository.save(userLoc)
-        newLocationTokenRepository.delete(locToken)
-        return userLoc.country
-    }
-
-    fun addUserLocation(user: User?, ip: String?) {
-        if (!isGeoIpLibEnabled) {
-            return
-        }
-        try {
-            val ipAddress = InetAddress.getByName(ip)
-            val country = databaseReader!!.country(ipAddress)
-                .country
-                .name
-            val loc = UserLocation(country, user)
-            loc.isEnabled = true
-            userLocationRepository.save(loc)
-        } catch (e: Exception) {
-            throw RuntimeException(e)
-        }
     }
 
     private val isGeoIpLibEnabled: Boolean

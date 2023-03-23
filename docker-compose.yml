@@ -1,0 +1,6 @@
+version: '3.8'
+services:
+  beanstalk-flask:
+    image: "allan2002/webdroid:latest"
+    ports:
+      - "80:9000"

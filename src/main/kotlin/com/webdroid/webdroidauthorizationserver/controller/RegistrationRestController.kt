@@ -41,7 +41,6 @@ class RegistrationRestController @Autowired constructor(
     fun registerUserAccount(accountDto: @Valid UserDto, request: HttpServletRequest): GenericResponse {
         logger.debug("Registering user account with information: {}", accountDto)
         val registered = userService.registerNewUserAccount(accountDto)
-        userService.addUserLocation(registered, getClientIP(request))
         eventPublisher.publishEvent(OnRegistrationCompleteEvent(registered, appConfig.frontendUrl))
         return GenericResponse("success")
     }

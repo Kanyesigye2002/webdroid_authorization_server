@@ -41,7 +41,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
-    implementation("com.maxmind.geoip2:geoip2:4.0.0")
+//    implementation("com.maxmind.geoip2:geoip2:4.0.0")
     implementation("org.passay:passay:1.6.2")
     implementation("com.google.guava:guava:30.0-android")
     implementation("com.github.ua-parser:uap-java:1.5.4")
