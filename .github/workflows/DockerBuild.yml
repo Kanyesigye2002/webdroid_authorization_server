@@ -21,3 +21,19 @@ jobs:
           context: .
           push: true
           tags: allan2002/webdroid:latest
+
+      - name: Get timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +'%s')"
+
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v16
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.EB_APP_NAME }}
+          environment_name: ${{ secrets.EB_ENV_NAME }}
+          version_label: ${{steps.timestamp.outputs.timestamp}}
+          region: ${{ secrets.EB_REGION }}
+          deployment_package: docker-compose.yml
