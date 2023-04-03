@@ -30,7 +30,7 @@ class SetupDataLoader @Autowired constructor(
         val adminRole = createRoleIfNotFound("ROLE_ADMIN")
         val userRole = createRoleIfNotFound("ROLE_USER")
 
-        createUserIfNotFound("test@test.com", "Test", "Test", "", "0700000000", "https://api-dev-minimal-v4.vercel.app/assets/images/covers/avatar_1.jpg", "test", userRole)
+        createUserIfNotFound("test@test.com", "Test", "Account", "", "0700000000", "https://api-dev-minimal-v4.vercel.app/assets/images/covers/avatar_1.jpg", "test", userRole)
         createUserIfNotFound("test@webdroid.com", "Webdroid", "Services", "Programmer", "0750000000","https://api-dev-minimal-v4.vercel.app/assets/images/covers/avatar_2.jpg","webdroid", adminRole)
         alreadySetup = true
     }
