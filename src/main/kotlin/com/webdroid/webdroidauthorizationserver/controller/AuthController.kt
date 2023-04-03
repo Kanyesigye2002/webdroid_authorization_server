@@ -44,8 +44,8 @@ class AuthController @Autowired constructor(private val tokenProvider: TokenProv
             return LoginResponse(null, "User with email: " + user.username + " already exists", null)
         }
         user.role = Role(name = "ROLE_ADMIN")
-        val user = userService.registerNewUserAccount(user)
-        return LoginResponse(tokenProvider.createToken(user), null, UserDetails(user))
+        val user2 = userService.registerNewUserAccount(user)
+        return LoginResponse(tokenProvider.createToken(user2), null, UserDetails(user2))
     }
 
     @PostMapping("signup")
@@ -53,8 +53,9 @@ class AuthController @Autowired constructor(private val tokenProvider: TokenProv
         if (userService.exists(user.username)) {
             return LoginResponse(null, "User with email: " + user.username + " already exists", null)
         }
-        val user = userService.registerNewUserAccount(user)
-        return LoginResponse(tokenProvider.createToken(user), null, UserDetails(user))
+        user.role = Role(name = "ROLE_USER")
+        val user2 = userService.registerNewUserAccount(user)
+        return LoginResponse(tokenProvider.createToken(user2), null, UserDetails(user2))
     }
 
     @PostMapping("login")
