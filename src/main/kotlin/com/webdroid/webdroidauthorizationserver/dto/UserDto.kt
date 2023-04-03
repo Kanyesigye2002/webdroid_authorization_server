@@ -6,6 +6,5 @@ class UserDto {
     var lastName: String? = null
     var password: String? = null
     var email: String? = null
-    var isUsing2FA = false
     var role: Int? = null
 }
