@@ -17,17 +17,28 @@ class User(
     var password: String? = null,
     var email: String? = null,
     var name: String? = null,
+    var title: String? = null,
     var firstName: String? = null,
     var lastName: String? = null,
     var avatarUrl: String? = null,
+    var phoneNumber: String? = null,
+    var country: String? = null,
+    var address: String? = null,
+    var state: String? = null,
+    var city: String? = null,
+    @Column(columnDefinition = "TEXT")
+    var about: String? = null,
     var providerId: String = "",
     var provider: AuthProvider = AuthProvider.local,
-    var isUsing2FA: Boolean = false,
-    val secret: String? = null,
-    var enabled: Boolean = false,
+    var enabled: Boolean = true,
+
     //
-    @ManyToMany(fetch = FetchType.EAGER) @JoinTable(name = "users_roles")
-    var roles: MutableList<Role> = mutableListOf()
+    @OneToOne
+    var notifications: UserNotifications? = null,
+    @OneToOne
+    var permissions: UserPermissions? = null,
+    @ManyToOne
+    var role: Role? = null,
 )
 
 

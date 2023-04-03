@@ -2,11 +2,12 @@ package com.webdroid.webdroidauthorizationserver.controller
 
 import com.webdroid.webdroidauthorizationserver.config.security.CurrentUser
 import com.webdroid.webdroidauthorizationserver.config.security.TokenProvider
-import com.webdroid.webdroidauthorizationserver.dto.UserDto
+import com.webdroid.webdroidauthorizationserver.entity.Role
 import com.webdroid.webdroidauthorizationserver.entity.User
 import com.webdroid.webdroidauthorizationserver.entity.UserPrincipal
 import com.webdroid.webdroidauthorizationserver.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.AuthenticationException
@@ -27,12 +28,32 @@ class AuthController @Autowired constructor(private val tokenProvider: TokenProv
         return userService.getUserByID(userPrincipal.id).get()
     }
 
-    @PostMapping("signup")
-    fun registerUser(@RequestBody userDto: UserDto): LoginResponse {
-        if (userService.exists(userDto.username!!)) {
-            return LoginResponse(null, "User with email: " + userDto.username + " already exists", null)
+    @GetMapping("user/{id}")
+    fun getUser(@PathVariable id: String): User? {
+        return userService.getUserByID(id).get()
+    }
+
+    @PostMapping("user/list")
+    fun getStaffList(@RequestBody searchRequest: SearchRequest): Page<User> {
+        return userService.searchUser(searchRequest)
+    }
+
+    @PostMapping("staff/signup")
+    fun registerStaff(@RequestBody user: User): LoginResponse {
+        if (userService.exists(user.username)) {
+            return LoginResponse(null, "User with email: " + user.username + " already exists", null)
         }
-        val user = userService.registerNewUserAccount(userDto)
+        user.role = Role(name = "ROLE_ADMIN")
+        val user = userService.registerNewUserAccount(user)
+        return LoginResponse(tokenProvider.createToken(user), null, UserDetails(user))
+    }
+
+    @PostMapping("signup")
+    fun registerUser(@RequestBody user: User): LoginResponse {
+        if (userService.exists(user.username)) {
+            return LoginResponse(null, "User with email: " + user.username + " already exists", null)
+        }
+        val user = userService.registerNewUserAccount(user)
         return LoginResponse(tokenProvider.createToken(user), null, UserDetails(user))
     }
 

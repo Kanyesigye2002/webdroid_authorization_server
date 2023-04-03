@@ -29,7 +29,7 @@ class TokenProvider @Autowired constructor(private val appConfig: AppProperties)
         return Jwts.builder()
             .setId(UUID.randomUUID().toString())
             .setIssuer("Webdroid")
-            .setSubject(userPrincipal.id)
+            .setSubject(userPrincipal.username)
             .setIssuedAt(now)
             .setExpiration(expiryDate)
             .signWith(key, SignatureAlgorithm.HS512)
@@ -43,14 +43,14 @@ class TokenProvider @Autowired constructor(private val appConfig: AppProperties)
         return Jwts.builder()
             .setId(UUID.randomUUID().toString())
             .setIssuer("Webdroid")
-            .setSubject(user.id)
+            .setSubject(user.username)
             .setIssuedAt(now)
             .setExpiration(expiryDate)
             .signWith(key, SignatureAlgorithm.HS512)
             .compact()
     }
 
-    fun getUserIdFromToken(token: String?): String {
+    fun getUserNameFromToken(token: String?): String {
 
         val key: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(appConfig.auth.tokenSecret))
 val claims = Jwts.parserBuilder()

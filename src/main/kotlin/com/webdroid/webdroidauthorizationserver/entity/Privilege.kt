@@ -1,6 +1,9 @@
 package com.webdroid.webdroidauthorizationserver.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
 
 @Entity
 class Privilege {
@@ -9,9 +12,6 @@ class Privilege {
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null
     var name: String? = null
-
-    @ManyToMany(mappedBy = "privileges")
-    var roles: Collection<Role>? = null
 
     constructor() : super()
     constructor(name: String?) : super() {

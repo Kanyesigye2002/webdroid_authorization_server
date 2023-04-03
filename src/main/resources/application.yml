@@ -39,7 +39,7 @@ spring:
 #    password: Eh3XJmJqnOMIB9PUkEGXTJpPIgjttm37
 #    username: gcc
 #  datasource:
-#    url: jdbc:postgresql://localhost:5432/tester
+#    url: jdbc:postgresql://localhost:5432/testers
 #    password: root
 #    username: postgres
 #  datasource:
@@ -54,7 +54,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
@@ -82,7 +82,7 @@ app:
     tokenSecret: 04ca023b39512e46d0c2cf4b48d5aac61d34302994c87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
     tokenExpirationMsec: 864000000
   cors:
-    allowedOrigins: http://localhost:3031,http://localhost:9000,http://localhost:8080
+    allowedOrigins: http://localhost:3031,http://localhost:9000,http://localhost:8080,https://akezimbira.vercel.app,https://zimba.vercel.app
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,
     # we'll be generating an auth token for the user and sending the token to the

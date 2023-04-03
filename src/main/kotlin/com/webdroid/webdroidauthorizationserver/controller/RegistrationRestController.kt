@@ -4,7 +4,6 @@ import com.webdroid.webdroidauthorizationserver.config.AppProperties
 import com.webdroid.webdroidauthorizationserver.config.AppUserDetailsService
 import com.webdroid.webdroidauthorizationserver.config.security.ActiveUserStore
 import com.webdroid.webdroidauthorizationserver.dto.PasswordDto
-import com.webdroid.webdroidauthorizationserver.dto.UserDto
 import com.webdroid.webdroidauthorizationserver.entity.User
 import com.webdroid.webdroidauthorizationserver.entity.VerificationToken
 import com.webdroid.webdroidauthorizationserver.exception.InvalidOldPasswordException
@@ -38,9 +37,9 @@ class RegistrationRestController @Autowired constructor(
 
     // Registration
     @PostMapping("/user/registration")
-    fun registerUserAccount(accountDto: @Valid UserDto, request: HttpServletRequest): GenericResponse {
-        logger.debug("Registering user account with information: {}", accountDto)
-        val registered = userService.registerNewUserAccount(accountDto)
+    fun registerUserAccount(user: User, request: HttpServletRequest): GenericResponse {
+        logger.info("User name: ${user.username}")
+        val registered = userService.registerNewUserAccount(user)
         eventPublisher.publishEvent(OnRegistrationCompleteEvent(registered, appConfig.frontendUrl))
         return GenericResponse("success")
     }

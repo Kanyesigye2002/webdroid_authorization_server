@@ -1,12 +1,13 @@
 package com.webdroid.webdroidauthorizationserver.service
 
-import com.webdroid.webdroidauthorizationserver.dto.UserDto
+import com.webdroid.webdroidauthorizationserver.controller.SearchRequest
 import com.webdroid.webdroidauthorizationserver.entity.*
 import com.webdroid.webdroidauthorizationserver.exception.UserAlreadyExistsException
 import com.webdroid.webdroidauthorizationserver.repository.*
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
+import org.springframework.data.domain.Page
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
@@ -21,9 +22,12 @@ class UserService @Autowired constructor(
     private val tokenRepository: VerificationTokenRepository,
     private val passwordTokenRepository: PasswordResetTokenRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val userNotificationsRepository: UserNotificationsRepository,
+    private val userPermissionRepository: UserPermissionRepository,
     private val roleRepository: RoleRepository,
     private val userLocationRepository: UserLocationRepository,
     private val newLocationTokenRepository: NewLocationTokenRepository,
+    private val specificationService: FiltersSpecificationService<User>,
     private val env: Environment
 ) {
 
@@ -39,20 +43,26 @@ class UserService @Autowired constructor(
             .map { obj: Authentication -> obj.name }
             .flatMap { userName: String -> userRepository.findByUsername(userName) }
             .orElse(null)
-    
+
     // API
-    fun registerNewUserAccount(accountDto: UserDto): User {
-        if (exists(accountDto.username!!)) {
-            throw UserAlreadyExistsException("There is an account with that email address: " + accountDto.email)
+    fun registerNewUserAccount(user: User): User {
+        if (exists(user.username)) {
+            throw UserAlreadyExistsException("There is an account with that email address: " + user.username)
         }
-        val user = User()
-        user.firstName = accountDto.firstName!!
-        user.lastName = accountDto.lastName!!
-        user.password = passwordEncoder.encode(accountDto.password)
-        user.email = accountDto.email
-        user.username = accountDto.email!!
-        user.isUsing2FA = accountDto.isUsing2FA
-        user.roles = mutableListOf(roleRepository.findByName("ROLE_USER")!!)
+        var userPermissions: UserPermissions? = null
+        if (user.permissions != null)
+            userPermissions = userPermissionRepository.save(user.permissions!!)
+        var userNotifications: UserNotifications? = null
+        if (user.notifications != null)
+            userNotifications = userNotificationsRepository.save(user.notifications!!)
+
+        user.permissions = userPermissions
+        user.notifications = userNotifications
+
+        if (user.role != null)
+            user.role = roleRepository.findByName(user.role!!.name!!)
+        else
+            user.role = roleRepository.findByName("ROLE_USER")
         return userRepository.save(user)
     }
 
@@ -150,6 +160,11 @@ class UserService @Autowired constructor(
                 .toString(), loc
         )
         return newLocationTokenRepository.save(token)
+    }
+
+    fun searchUser(request: SearchRequest): Page<User> {
+        val searchSpecification = specificationService.getSearchSpecification(request)
+        return userRepository.findAll(searchSpecification, request.page.getPageable())
     }
 
     companion object {
