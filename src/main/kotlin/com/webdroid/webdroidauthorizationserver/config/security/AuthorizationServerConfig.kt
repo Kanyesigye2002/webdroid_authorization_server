@@ -111,7 +111,8 @@ class AuthorizationServerConfig @Autowired constructor(private val passwordEncod
     @Bean
     fun authorizationServerSettings(): AuthorizationServerSettings {
         return AuthorizationServerSettings.builder()
-            .issuer("http://localhost:9000")
+//            .issuer("http://localhost:9000")
+            .issuer("https://webdroid.up.railway.app")
             .build()
     }
 }
