@@ -2,7 +2,6 @@ package com.webdroid.webdroidauthorizationserver.config
 
 import com.webdroid.webdroidauthorizationserver.entity.Role
 import com.webdroid.webdroidauthorizationserver.entity.User
-import com.webdroid.webdroidauthorizationserver.repository.PrivilegeRepository
 import com.webdroid.webdroidauthorizationserver.repository.RoleRepository
 import com.webdroid.webdroidauthorizationserver.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional
 class SetupDataLoader @Autowired constructor(
     private val userRepository: UserRepository,
     private val roleRepository: RoleRepository,
-    private val privilegeRepository: PrivilegeRepository,
     private val passwordEncoder: PasswordEncoder
 ) : ApplicationListener<ContextRefreshedEvent> {
     private var alreadySetup = false
